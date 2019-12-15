@@ -1,37 +1,33 @@
-import { Component, OnInit, OnChanges, Input, EventEmitter, trigger, state, animate, transition, style } from '@angular/core';
-import { Location } from '@angular/common';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-import { environment } from '../../../environments/environment';
+import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Location} from '@angular/common';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {environment} from '../../../environments/environment';
 
-import { MaterializeAction } from 'angular2-materialize';
-import { FileUploader } from 'ng2-file-upload';
-import { DragulaService } from 'ng2-dragula/ng2-dragula';
-import { EditorModule } from 'primeng/components/editor/editor';
+import {MaterializeAction} from 'angular2-materialize';
+import {DragulaService} from 'ng2-dragula/ng2-dragula';
 
-import { CommentComponent } from '../comment/comment.component';
+import {CourseDetailsModalDataService} from '../../services/course-details-modal-data.service';
+import {UploaderModalService} from '../../services/uploader-modal.service';
+import {FilesEditionService} from '../../services/files-edition.service';
+import {CourseService} from '../../services/course.service';
+import {SessionService} from '../../services/session.service';
+import {ForumService} from '../../services/forum.service';
+import {FileService} from '../../services/file.service';
+import {AuthenticationService} from '../../services/authentication.service';
+import {VideoSessionService} from '../../services/video-session.service';
+import {AnimationService} from '../../services/animation.service';
 
-import { CourseDetailsModalDataService } from '../../services/course-details-modal-data.service';
-import { UploaderModalService } from '../../services/uploader-modal.service';
-import { FilesEditionService } from '../../services/files-edition.service';
-import { CourseService } from '../../services/course.service';
-import { SessionService } from '../../services/session.service';
-import { ForumService } from '../../services/forum.service';
-import { FileService } from '../../services/file.service';
-import { AuthenticationService } from '../../services/authentication.service';
-import { VideoSessionService } from '../../services/video-session.service';
-import { AnimationService } from '../../services/animation.service';
+import {Session} from '../../classes/session';
+import {Course} from '../../classes/course';
+import {Entry} from '../../classes/entry';
+import {Comment} from '../../classes/comment';
+import {FileGroup} from '../../classes/file-group';
+import {File} from '../../classes/file';
+import {User} from '../../classes/user';
 
-import { Session } from '../../classes/session';
-import { Course } from '../../classes/course';
-import { Entry } from '../../classes/entry';
-import { Comment } from '../../classes/comment';
-import { FileGroup } from '../../classes/file-group';
-import { File } from '../../classes/file';
-import { User } from '../../classes/user';
-
-import { OpenVidu, LocalRecorder, Publisher } from "openvidu-browser";
-import { Forum } from '../../classes/forum';
+import {LocalRecorder, OpenVidu, Publisher, VideoElementEvent} from "openvidu-browser";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -234,10 +230,12 @@ export class CourseDetailsComponent implements OnInit {
               this.updateCheckboxForumEdition(this.course.courseDetails.forum.activated);
               this.welcomeText = this.course.courseDetails.info;
             },
-            error => { });
+            error => {
+            });
         });
       })
-      .catch((e) => { });
+      .catch((e) => {
+      });
   }
 
   ngOnDestroy() {
@@ -292,8 +290,7 @@ export class CourseDetailsComponent implements OnInit {
     this.allowFilesEdition = !this.allowFilesEdition;
     if (this.allowFilesEdition) {
       this.filesEditionIcon = "keyboard_arrow_left";
-    }
-    else {
+    } else {
       this.filesEditionIcon = "mode_edit";
     }
     this.filesEditionService.announceModeEdit(this.allowFilesEdition);
@@ -303,8 +300,7 @@ export class CourseDetailsComponent implements OnInit {
     this.allowAttendersEdition = !this.allowAttendersEdition;
     if (this.allowAttendersEdition) {
       this.attendersEditionIcon = "keyboard_arrow_left";
-    }
-    else {
+    } else {
       this.attendersEditionIcon = "mode_edit";
     }
   }
@@ -355,9 +351,11 @@ export class CourseDetailsComponent implements OnInit {
         response => {
           this.course.courseDetails.forum.entries.push(response.entry as Entry); //Only on succesful post we update the modified forum
           this.processingPost = false;
-          this.actions2.emit({ action: "modal", params: ['close'] });
+          this.actions2.emit({action: "modal", params: ['close']});
         },
-        error => { this.processingPost = false; }
+        error => {
+          this.processingPost = false;
+        }
       );
     }
 
@@ -373,9 +371,11 @@ export class CourseDetailsComponent implements OnInit {
           this.course = response;
 
           this.processingPost = false;
-          this.actions2.emit({ action: "modal", params: ['close'] });
+          this.actions2.emit({action: "modal", params: ['close']});
         },
-        error => { this.processingPost = false; }
+        error => {
+          this.processingPost = false;
+        }
       );
     }
 
@@ -395,9 +395,11 @@ export class CourseDetailsComponent implements OnInit {
           }
 
           this.processingPost = false;
-          this.actions2.emit({ action: "modal", params: ['close'] });
+          this.actions2.emit({action: "modal", params: ['close']});
         },
-        error => { this.processingPost = false; }
+        error => {
+          this.processingPost = false;
+        }
       );
     }
 
@@ -410,10 +412,12 @@ export class CourseDetailsComponent implements OnInit {
           this.course.courseDetails = response;
 
           this.processingPost = false; // Stop the loading animation
-          this.actions2.emit({ action: "modal", params: ['close'] }); // CLose the modal
+          this.actions2.emit({action: "modal", params: ['close']}); // CLose the modal
           if (!this.allowFilesEdition) this.changeModeEdition(); // Activate file edition view if deactivated
         },
-        error => { this.processingPost = false; }
+        error => {
+          this.processingPost = false;
+        }
       );
     }
 
@@ -428,17 +432,22 @@ export class CourseDetailsComponent implements OnInit {
               this.cleanRecording();
               let comment: Comment = JSON.parse(responseAsText) as Comment;
               let entry: Entry = response.entry as Entry;
-              let index = entry.comments.map((c) => { return c.id; }).indexOf(response.comment.id);
+              let index = entry.comments.map((c) => {
+                return c.id;
+              }).indexOf(response.comment.id);
               if (index != -1) {
                 entry.comments[index] = comment;
               }
               this.course.courseDetails.forum.entries.push(entry); //Only on succesful post we update the modified forum
               this.processingPost = false;
-              this.actions2.emit({ action: "modal", params: ['close'] });
+              this.actions2.emit({action: "modal", params: ['close']});
             })
-            .catch((e) => { });
+            .catch((e) => {
+            });
         },
-        error => { this.processingPost = false; }
+        error => {
+          this.processingPost = false;
+        }
       );
     }
 
@@ -465,11 +474,14 @@ export class CourseDetailsComponent implements OnInit {
               }
 
               this.processingPost = false;
-              this.actions2.emit({ action: "modal", params: ['close'] });
+              this.actions2.emit({action: "modal", params: ['close']});
             })
-            .catch((e) => { });
+            .catch((e) => {
+            });
         },
-        error => { this.processingPost = false; }
+        error => {
+          this.processingPost = false;
+        }
       );
     }
   }
@@ -495,9 +507,11 @@ export class CourseDetailsComponent implements OnInit {
             }
           }
           this.processingPut = false;
-          this.actions3.emit({ action: "modal", params: ['close'] });
+          this.actions3.emit({action: "modal", params: ['close']});
         },
-        error => { this.processingPut = false; }
+        error => {
+          this.processingPut = false;
+        }
       );
     }
 
@@ -511,9 +525,11 @@ export class CourseDetailsComponent implements OnInit {
           this.updateCheckboxForumEdition(response);
 
           this.processingPut = false;
-          this.actions3.emit({ action: "modal", params: ['close'] });
+          this.actions3.emit({action: "modal", params: ['close']});
         },
-        error => { this.processingPut = false; }
+        error => {
+          this.processingPut = false;
+        }
       );
     }
 
@@ -532,9 +548,11 @@ export class CourseDetailsComponent implements OnInit {
           }
 
           this.processingPut = false;
-          this.actions3.emit({ action: "modal", params: ['close'] });
+          this.actions3.emit({action: "modal", params: ['close']});
         },
-        error => { this.processingPut = false; }
+        error => {
+          this.processingPut = false;
+        }
       );
     }
 
@@ -553,9 +571,11 @@ export class CourseDetailsComponent implements OnInit {
           }
 
           this.processingPut = false;
-          this.actions3.emit({ action: "modal", params: ['close'] });
+          this.actions3.emit({action: "modal", params: ['close']});
         },
-        error => { this.processingPut = false; }
+        error => {
+          this.processingPut = false;
+        }
       );
     }
 
@@ -567,14 +587,16 @@ export class CourseDetailsComponent implements OnInit {
         let arrayNewAttenders = [this.inputAttenderSimple];
         this.courseService.addCourseAttenders(this.course.id, arrayNewAttenders).subscribe(
           response => {
-            let newAttenders = response.attendersAdded as User[];
+            let newAttenders = response.attenders as User[];
             this.course.attenders = this.course.attenders.concat(newAttenders);
             this.handleAttendersMessage(response);
 
             this.processingPut = false;
-            this.actions3.emit({ action: "modal", params: ['close'] });
+            this.actions3.emit({action: "modal", params: ['close']});
           },
-          error => { this.processingPut = false; }
+          error => {
+            this.processingPut = false;
+          }
         );
       }
       //If the attenders are being added in the MULTIPLE tab
@@ -591,14 +613,16 @@ export class CourseDetailsComponent implements OnInit {
 
         this.courseService.addCourseAttenders(this.course.id, arrayNewAttenders).subscribe(
           response => { //response is an object with 4 arrays: attenders added, attenders that were already added, emails invalid and emails not registered
-            let newAttenders = response.attendersAdded as User[];
+            let newAttenders = response.attenders as User[];
             this.course.attenders = this.course.attenders.concat(newAttenders);
             this.handleAttendersMessage(response);
 
             this.processingPut = false;
-            this.actions3.emit({ action: "modal", params: ['close'] });
+            this.actions3.emit({action: "modal", params: ['close']});
           },
-          error => { this.processingPut = false; }
+          error => {
+            this.processingPut = false;
+          }
         );
       }
       //If the attenders are being added in the FILE UPLOAD tab
@@ -625,9 +649,11 @@ export class CourseDetailsComponent implements OnInit {
         }
 
         this.processingPut = false;
-        this.actions3.emit({ action: "modal", params: ['close'] });
+        this.actions3.emit({action: "modal", params: ['close']});
       },
-      error => { this.processingPut = false; }
+      error => {
+        this.processingPut = false;
+      }
     );
   }
 
@@ -650,7 +676,9 @@ export class CourseDetailsComponent implements OnInit {
         this.arrayOfAttDels[j] = false;
         if (this.course.attenders.length <= 1) this.changeModeAttenders(); //If there are no attenders, mode edit is closed
       },
-      error => { this.arrayOfAttDels[j] = false; }
+      error => {
+        this.arrayOfAttDels[j] = false;
+      }
     );
   }
 
@@ -671,7 +699,9 @@ export class CourseDetailsComponent implements OnInit {
 
         this.processingCourseInfo = false;
       },
-      error => { this.processingCourseInfo = false; }
+      error => {
+        this.processingCourseInfo = false;
+      }
     )
   }
 
@@ -710,7 +740,7 @@ export class CourseDetailsComponent implements OnInit {
 
       this.processingPut = false; // Stop the loading animation
       this.uploaderModalService.announceUploaderClosed(true); // Clear the uploader file queue
-      this.actions3.emit({ action: "modal", params: ['close'] }); // Close the modal
+      this.actions3.emit({action: "modal", params: ['close']}); // Close the modal
     } else {
       this.processingPut = false;
       console.log("There has been an error: " + response);
@@ -721,7 +751,9 @@ export class CourseDetailsComponent implements OnInit {
   //INTERNAL AUXILIAR METHODS
   //Sorts an array of Session by their 'date' attribute (the first are the erliest)
   sortSessionsByDate(sessionArray: Session[]): void {
-    sessionArray.sort(function (a, b) { return (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0); });
+    sessionArray.sort(function (a, b) {
+      return (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0);
+    });
   }
 
   //Transforms a Date object into a single string ("HH:MM")
@@ -823,7 +855,8 @@ export class CourseDetailsComponent implements OnInit {
       response => {
         this.course.courseDetails.files = response;
       },
-      error => { }
+      error => {
+      }
     );
   }
 
@@ -840,8 +873,7 @@ export class CourseDetailsComponent implements OnInit {
           return j;
         }
       }
-    }
-    else return -1;
+    } else return -1;
   }
 
 
@@ -886,13 +918,13 @@ export class CourseDetailsComponent implements OnInit {
         }
       }
     );
-    this.publisher.on('videoElementCreated', (e) => {
+    this.publisher.on('videoElementCreated', (e: VideoElementEvent) => {
       if (publisherOptions.audio && !publisherOptions.video) {
-        $(e.element).css({ 'background-color': '#4d4d4d', 'padding': '50px' });
+        $(e.element).css({'background-color': '#4d4d4d', 'padding': '50px'});
         $(e.element).attr('poster', 'assets/images/volume.png');
       }
     })
-    this.publisher.on('videoPlaying', (e) => {
+    this.publisher.on('videoPlaying', (e: VideoElementEvent) => {
       this.recordRadioEnabled = true;
       this.addRecordingControls(e.element);
     });
@@ -913,7 +945,8 @@ export class CourseDetailsComponent implements OnInit {
           recordingPreview.controls = true;
           this.addPostRecordingControls(recordingPreview);
         })
-        .catch((e) => { });
+        .catch((e) => {
+        });
     }
     this.recording = !this.recording;
   }
@@ -939,7 +972,8 @@ export class CourseDetailsComponent implements OnInit {
 
   cleanRecording() {
     if (!!this.recorder) this.recorder.clean();
-    if (!!this.publisher) this.publisher.destroy();
+    //TODO: Find out the method that substituted this one
+    //if (!!this.publisher) this.publisher.destroy();
     delete this.publisher;
     this.recordRadioEnabled = true;
     this.publisherErrorMessage = '';

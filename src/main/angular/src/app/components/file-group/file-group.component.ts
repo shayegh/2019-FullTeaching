@@ -1,15 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {File} from '../../classes/file';
+import {FileGroup} from '../../classes/file-group';
 
-import { Subscription }             from 'rxjs/Subscription';
-
-import { File }      from '../../classes/file';
-import { FileGroup } from '../../classes/file-group';
-
-import { FileService }           from '../../services/file.service';
-import { FilesEditionService }   from '../../services/files-edition.service';
-import { CourseDetailsModalDataService } from '../../services/course-details-modal-data.service';
-import { AuthenticationService } from '../../services/authentication.service';
-import { AnimationService }      from '../../services/animation.service';
+import {FileService} from '../../services/file.service';
+import {FilesEditionService} from '../../services/files-edition.service';
+import {CourseDetailsModalDataService} from '../../services/course-details-modal-data.service';
+import {AuthenticationService} from '../../services/authentication.service';
+import {AnimationService} from '../../services/animation.service';
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -86,7 +84,9 @@ export class FileGroupComponent implements OnInit {
         this.filesEditionService.announceFileGroupDeleted(response.id);
         this.fileGroupDeletion = false;
       },
-      error => { this.fileGroupDeletion = false; }
+      error => {
+        this.fileGroupDeletion = false;
+      }
     );
   }
 
@@ -103,7 +103,9 @@ export class FileGroupComponent implements OnInit {
         }
         this.arrayOfDeletions[i] = false;
       },
-      error => { this.arrayOfDeletions[i] = false; }
+      error => {
+        this.arrayOfDeletions[i] = false;
+      }
     );
   }
 
@@ -144,7 +146,8 @@ export class FileGroupComponent implements OnInit {
         return 'rgba(116, 0, 109, 0.46)';
       case 'txt':
         return 'rgba(136, 136, 136, 0.46)';
-      default: '#ffffff';
+      default:
+        '#ffffff';
     }
   }
 

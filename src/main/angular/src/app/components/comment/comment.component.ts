@@ -31,11 +31,11 @@ export class CommentComponent implements OnInit {
   }
 
   onHovering(event) {
-    $(event.target).attr("controls", "");
+    event.target.attr("controls", "");
   }
 
   onUnhovering(event) {
-    $(event.target).removeAttr("controls");
+    event.target.removeAttr("controls");
   }
 
 }

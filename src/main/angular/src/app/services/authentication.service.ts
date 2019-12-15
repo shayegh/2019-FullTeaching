@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 
 import { User } from '../classes/user';
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 
 @Injectable()
 export class AuthenticationService {
@@ -16,31 +16,27 @@ export class AuthenticationService {
   private user: User;
   private role: string;
 
-  constructor(private http: Http, private router: Router) {
+  constructor(private http: HttpClient, private router: Router) {
     //this.reqIsLogged().catch((e) => { });
   }
 
   logIn(user: string, pass: string) {
     let userPass = user + ":" + pass;
-    let headers = new Headers({
-      'Authorization': 'Basic ' + utf8_to_b64(userPass),
-      'X-Requested-With': 'XMLHttpRequest'
-    });
-    let options = new RequestOptions({ headers });
-
-    return this.http.get(this.urlLogIn, options)
-      .map(response => {
-        this.processLogInResponse(response);
-        return this.user;
+    const options = {
+      headers: new HttpHeaders({
+        'Authorization': 'Basic ' + utf8_to_b64(userPass),
+        'X-Requested-With': 'XMLHttpRequest'
       })
-      .catch(error => Observable.throw(error));
+    };
+
+    return this.http.get<User>(this.urlLogIn, options);
   }
 
   logOut() {
 
     console.log("Logging out...");
 
-    return this.http.get(this.urlLogOut).map(
+    return this.http.get<User>(this.urlLogOut).pipe(
       response => {
 
         console.log("Logout succesful!");
@@ -56,7 +52,6 @@ export class AuthenticationService {
 
         return response;
       })
-      .catch(error => Observable.throw(error));
   }
 
   private processLogInResponse(response) {
@@ -86,11 +81,11 @@ export class AuthenticationService {
     return new Promise((resolve, reject) => {
 
       console.log("Checking if user is logged");
-
-      let headers = new Headers({
-        'X-Requested-With': 'XMLHttpRequest'
-      });
-      let options = new RequestOptions({ headers });
+      const options = {
+        headers: new HttpHeaders({
+          'X-Requested-With': 'XMLHttpRequest'
+        })
+      };
 
       this.http.get(this.urlLogIn, options).subscribe(
         response => { this.processLogInResponse(response); resolve() },

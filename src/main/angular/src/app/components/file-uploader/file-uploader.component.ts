@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
 
 import { environment } from '../../../environments/environment';
 import { Constants } from '../../constants';
@@ -7,6 +6,7 @@ import { Constants } from '../../constants';
 import { FileUploader } from 'ng2-file-upload';
 
 import { UploaderModalService } from '../../services/uploader-modal.service';
+import {Subscription} from "rxjs";
 
 declare var Materialize: any;
 

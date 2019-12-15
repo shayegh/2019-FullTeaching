@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-error-message',
@@ -21,7 +21,8 @@ export class ErrorMessageComponent {
   @Output()
   eventShowable = new EventEmitter<boolean>();
 
-  constructor() { }
+  constructor() {
+  }
 
   public closeAlert() {
     this.eventShowable.emit(false);

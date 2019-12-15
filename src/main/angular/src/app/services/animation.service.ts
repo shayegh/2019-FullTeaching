@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class AnimationService {
 
-  constructor() { }
+  constructor() {
+  }
 
   animateIfSmall() {
-    if($(window).width() <= 600 || $(window).height() <= 600) $('html,body').animate({scrollTop:0},200);
+    if ($(window).width() <= 600 || $(window).height() <= 600) $('html,body').animate({scrollTop: 0}, 200);
   }
 
   animateToBottom(selector: string, ms: number) {

@@ -1,16 +1,14 @@
-import { Component, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, EventEmitter} from '@angular/core';
+import {Router} from '@angular/router';
 
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 
-import { MaterializeAction } from 'angular2-materialize';
+import {MaterializeAction} from 'angular2-materialize';
 
-import { AuthenticationService } from '../../services/authentication.service';
-import { LoginModalService } from '../../services/login-modal.service';
-import { UserService } from '../../services/user.service';
-import { Constants } from '../../constants';
-
-import { User } from '../../classes/user';
+import {AuthenticationService} from '../../services/authentication.service';
+import {LoginModalService} from '../../services/login-modal.service';
+import {UserService} from '../../services/user.service';
+import {Constants} from '../../constants';
 
 declare var Materialize: any;
 
@@ -96,7 +94,7 @@ export class LoginModalComponent {
 
         // Login successful
         this.fieldsIncorrect = false;
-        this.actions.emit({ action: "modal", params: ['close'] });
+        this.actions.emit({action: "modal", params: ['close']});
         this.router.navigate(['/courses']);
       },
       error => {
@@ -123,8 +121,7 @@ export class LoginModalComponent {
       this.customClass = 'fail';
       this.toastMessage = 'Your must validate the captcha!';
       this.handleError();
-    }
-    else {
+    } else {
 
       //Passwords don't match
       if (this.password !== this.confirmPassword) {
@@ -133,9 +130,7 @@ export class LoginModalComponent {
         this.customClass = 'fail';
         this.toastMessage = 'Your passwords don\'t match!';
         this.handleError();
-      }
-
-      else {
+      } else {
 
         let regex = new RegExp(Constants.PASS_REGEX);
 
@@ -145,9 +140,7 @@ export class LoginModalComponent {
           this.customClass = 'fail';
           this.toastMessage = 'Password must be 8 characters long, one upperCase, one lowerCase and a number';
           this.handleError();
-        }
-
-        else {
+        } else {
 
           let userNameFixed = this.email;
           let userPasswordFixed = this.password;
@@ -167,20 +160,17 @@ export class LoginModalComponent {
                 this.errorContent = 'That email is already in use';
                 this.customClass = 'fail';
                 this.toastMessage = 'That email is already in use!';
-              }
-              else if (error === 400) { //BAD_REQUEST: Invalid password format
+              } else if (error === 400) { //BAD_REQUEST: Invalid password format
                 this.errorTitle = 'Invalid password format';
                 this.errorContent = 'Our server has rejected that password';
                 this.customClass = 'fail';
                 this.toastMessage = 'That password has not a valid format according to our server!';
-              }
-              else if (error === 403) { //FORBIDDEN: Invalid email format
+              } else if (error === 403) { //FORBIDDEN: Invalid email format
                 this.errorTitle = 'Invalid email format';
                 this.errorContent = 'Our server has rejected that email';
                 this.customClass = 'fail';
                 this.toastMessage = 'That email has not a valid format according to our server!';
-              }
-              else if (error === 401) { //UNAUTHORIZED: Captcha not validated
+              } else if (error === 401) { //UNAUTHORIZED: Captcha not validated
                 this.errorTitle = 'Captcha not validated!';
                 this.errorContent = 'I am sorry, but your bot does not work here :)';
                 this.customClass = 'fail';
