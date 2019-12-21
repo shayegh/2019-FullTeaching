@@ -1,11 +1,13 @@
 <div class="container margins-top-bottom">
 
   <!--CHANGE PASSWORD DIALOG-->
-  <div id="password-modal" class="modal my-modal-class course-modal" materialize="modal" [materializeParams]="[{dismissible: false}]">
+  <div id="password-modal" class="modal my-modal-class course-modal">
+<!--    materialize="modal" [materializeParams]="[{dismissible: false}]">-->
 
     <div *ngIf="processingPass" class="loading"></div>
 
-    <div class="modal-content" [class.filtered]="processingPass">
+    <div class="modal-content">
+<!--      [class.filtered]="processingPass">-->
       <p class="p-bold-modal-header">Change password</p>
       <div class="row no-margin">
 
@@ -14,21 +16,21 @@
 
             <div class="row row-mobile">
               <div class="input-field col s12">
-                <input [(ngModel)]="inputCurrentPassword" name="inputCurrentPassword" id="inputCurrentPassword" type="password" class="validate" required>
+                <input ngModel="inputCurrentPassword" name="inputCurrentPassword" id="inputCurrentPassword" type="password" class="validate" required>
                 <label for="inputCurrentPassword">Current password</label>
               </div>
             </div>
 
             <div class="row row-mobile">
               <div class="input-field col s12">
-                <input [(ngModel)]="inputNewPassword" name="inputNewPassword" id="inputNewPassword" type="password" class="validate" required>
+                <input ngModel="inputNewPassword" name="inputNewPassword" id="inputNewPassword" type="password" class="validate" required>
                 <label for="inputNewPassword">New password</label>
               </div>
             </div>
 
             <div class="row">
               <div class="input-field col s12">
-                <input [(ngModel)]="inputNewPassword2" name="inputNewPassword2" id="inputNewPassword2" type="password" class="validate" required>
+                <input ngModel="inputNewPassword2" name="inputNewPassword2" id="inputNewPassword2" type="password" class="validate" required>
                 <label for="inputNewPassword2">Repeat new password</label>
               </div>
             </div>

@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 
 import {environment} from '../../../environments/environment';
 
-import {MaterializeAction} from 'angular2-materialize';
+// import {MaterializeAction} from 'angular2-materialize';
 
 import {AuthenticationService} from '../../services/authentication.service';
 import {LoginModalService} from '../../services/login-modal.service';
@@ -20,25 +20,25 @@ declare var Materialize: any;
 
 export class LoginModalComponent {
 
-  private email: string;
-  private password: string;
-  private confirmPassword: string;
-  private nickName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  nickName: string;
 
-  private loginView: boolean;
-  private fieldsIncorrect: boolean;
-  private submitProcessing: boolean;
-  private actions = new EventEmitter<string | MaterializeAction>();
+  loginView: boolean;
+  fieldsIncorrect: boolean;
+  submitProcessing: boolean;
+  // private actions = new EventEmitter<string | MaterializeAction>();
 
-  private captchaValidated: boolean = false;
-  private captchaPublicKey: string;
-  private captchaToken: string;
+  captchaValidated: boolean = false;
+  captchaPublicKey: string;
+  captchaToken: string;
 
   //Error message content
-  private errorTitle: string;
-  private errorContent: string;
-  private customClass: string;
-  private toastMessage: string;
+  errorTitle: string;
+  errorContent: string;
+  customClass: string;
+  toastMessage: string;
 
 
   constructor(
@@ -94,7 +94,7 @@ export class LoginModalComponent {
 
         // Login successful
         this.fieldsIncorrect = false;
-        this.actions.emit({action: "modal", params: ['close']});
+        // this.actions.emit({action: "modal", params: ['close']});
         this.router.navigate(['/courses']);
       },
       error => {

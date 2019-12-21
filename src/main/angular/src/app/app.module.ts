@@ -2,10 +2,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
-import {routing} from './app.routing';
+import {AppRoutingModule} from './app.routing';
 
-import {MaterializeModule} from 'angular2-materialize';
-import {FileDropDirective, FileSelectDirective} from 'ng2-file-upload';
 import {InterventionAskedPipe} from './pipes/intervention-asked.pipe';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './components/navbar/navbar.component';
@@ -36,21 +34,19 @@ import {AnimationService} from './services/animation.service';
 import {VideoSessionService} from './services/video-session.service';
 
 import {CalendarComponent} from './components/calendar/calendar.component';
-import {DragulaModule} from 'ng2-dragula/ng2-dragula';
 import {EditorModule} from 'primeng/components/editor/editor';
-import {ReCaptchaModule} from 'angular2-recaptcha';
 import {HttpClientModule} from "@angular/common/http";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserModule,
     FormsModule,
     HttpClientModule,
-    MaterializeModule,
-    routing,
-    DragulaModule,
+    CommonModule,
     EditorModule,
-    ReCaptchaModule,
+    AppRoutingModule
   ],
   declarations: [
     AppComponent,
@@ -65,8 +61,6 @@ import {HttpClientModule} from "@angular/common/http";
     CommentComponent,
     FileGroupComponent,
     CalendarComponent,
-    FileSelectDirective,
-    FileDropDirective,
     VideoSessionComponent,
     FileUploaderComponent,
     StreamComponent,

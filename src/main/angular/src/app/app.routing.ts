@@ -1,11 +1,10 @@
-import { ModuleWithProviders } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
-import { PresentationComponent } from './components/presentation/presentation.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { CourseDetailsComponent } from './components/course-details/course-details.component';
-import { SettingsComponent } from './components/settings/settings.component';
-import { VideoSessionComponent } from './components/video-session/video-session.component';
+import { NgModule }              from '@angular/core';
+import { RouterModule, Routes }  from '@angular/router';
+import {PresentationComponent} from "./components/presentation/presentation.component";
+import {DashboardComponent} from "./components/dashboard/dashboard.component";
+import {CourseDetailsComponent} from "./components/course-details/course-details.component";
+import {SettingsComponent} from "./components/settings/settings.component";
+import {VideoSessionComponent} from "./components/video-session/video-session.component";
 
 const appRoutes: Routes = [
   {
@@ -31,4 +30,15 @@ const appRoutes: Routes = [
   },
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes, { useHash: true });
+@NgModule({
+  imports: [
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
+  ],
+  exports: [
+    RouterModule
+  ]
+})
+export class AppRoutingModule {}

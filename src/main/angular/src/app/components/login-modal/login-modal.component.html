@@ -1,4 +1,5 @@
-<div id="login-modal" class="modal my-modal-class" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="actions">
+<div id="login-modal" class="modal my-modal-class" materialize="modal">
+<!--  [materializeParams]="[{dismissible: false}]" [materializeActions]="actions">-->
 
   <div *ngIf="submitProcessing" class="loading"></div>
 
@@ -10,21 +11,21 @@
 
         <div class="row row-mobile">
           <div class="input-field col s12">
-            <input [(ngModel)]="email" name="email" id="email" type="email" class="validate" required autocomplete="email">
+            <input ngModel="email" name="email" id="email" type="email" class="validate" required autocomplete="email">
             <label for="email" data-error="Not an e-mail format!">Email</label>
           </div>
         </div>
 
         <div *ngIf="!loginView" class="row row-mobile">
           <div class="input-field col s12">
-            <input [(ngModel)]="nickName" name="nickName" id="nickName" type="text" class="validate" required>
+            <input ngModel="nickName" name="nickName" id="nickName" type="text" class="validate" required>
             <label for="nickName">Name</label>
           </div>
         </div>
 
         <div class="row row-mobile">
           <div class="input-field col s12">
-            <input [(ngModel)]="password" name="password" id="password" type="password" class="validate" required>
+            <input ngModel="password" name="password" id="password" type="password" class="validate" required>
             <label for="password">Password</label>
           </div>
         </div>
@@ -38,7 +39,7 @@
 
         <div class="recaptcha-div-outer" [class.hide]="loginView">
           <div class="recaptcha-div-inner">
-            <re-captcha (captchaResponse)="handleCorrectCaptcha($event)" site_key="{{this.captchaPublicKey}}"></re-captcha>
+<!--            <re-captcha (captchaResponse)="handleCorrectCaptcha($event)" site_key="{{this.captchaPublicKey}}"></re-captcha>-->
           </div>
         </div>
 
