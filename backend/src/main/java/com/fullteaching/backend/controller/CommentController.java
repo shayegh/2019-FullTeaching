@@ -1,6 +1,5 @@
 package com.fullteaching.backend.controller;
 
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.annotation.RoleFilter;
 import com.fullteaching.backend.model.Comment;
 import com.fullteaching.backend.notifications.NotificationDispatcher;
@@ -48,7 +47,6 @@ public final class CommentController extends SecureController{
 
 
     @RoleFilter(role = Role.TEACHER)
-    @LoginRequired
     @PostMapping(value = "/comment/delete/{commentId}/{courseId}/{entryId}")
     public ResponseEntity<?> removeComment(@PathVariable long commentId, @PathVariable long courseId, @PathVariable() long entryId) {
 
@@ -73,7 +71,6 @@ public final class CommentController extends SecureController{
         }
     }
 
-    @LoginRequired
     @RequestMapping(value = "/entry/{entryId}/forum/{courseDetailsId}", method = RequestMethod.POST)
     public ResponseEntity<?> newComment(
             @RequestBody Comment comment,

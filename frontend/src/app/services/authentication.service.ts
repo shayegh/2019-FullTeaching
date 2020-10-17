@@ -33,14 +33,15 @@ export class AuthenticationService {
   }
 
   logIn(user: string, pass: string) {
+    console.log(`New login!`);
     let userPass = user + ':' + pass;
-    let headers = new HttpHeaders({
+    let head = new HttpHeaders({
       Authorization: 'Basic ' + btoa(userPass),
       'X-Requested-With': 'XMLHttpRequest'
     });
-    let options = {headers};
-
-    return this.http.get(this.urlLogIn, options)
+    return this.http.get(this.urlLogIn, {
+      headers: head,
+    })
       .map(resp => {
         this.processLogInResponse(resp);
         return this.user;
@@ -49,6 +50,7 @@ export class AuthenticationService {
   }
 
   logOut() {
+    console.log(`New logout!`);
     return this.http.get(this.urlLogOut).subscribe(
       response => {
 
@@ -71,11 +73,7 @@ export class AuthenticationService {
   }
 
   private processLogInResponse(response) {
-
-    // Correctly logged in
-    console.log('User is already logged');
     this.user = (response as User);
-
     localStorage.setItem('login', 'FULLTEACHING');
     if (this.user.roles.indexOf('ROLE_ADMIN') !== -1) {
       this.role = 'ROLE_ADMIN';
@@ -93,12 +91,9 @@ export class AuthenticationService {
   }
 
 
-  reqIsLogged(): Promise<any> {
-
+  private reqIsLogged(): Promise<any> {
+    console.log(`Checking if user is logged in!`);
     return new Promise((resolve, reject) => {
-
-      console.log('Checking if user is logged');
-
       let headers = new HttpHeaders({
         'X-Requested-With': 'XMLHttpRequest'
       });
@@ -106,20 +101,16 @@ export class AuthenticationService {
 
       this.http.get(this.urlLogIn, options).subscribe(
         response => {
-          console.log(response)
           this.processLogInResponse(response);
-          resolve()
+          resolve();
         },
         error => {
           let msg = '';
-          if (error.status != 401) {
+          if (error.status !== 401) {
             msg = 'Error when asking if logged: ' + JSON.stringify(error);
             console.error(msg);
-            this.logOut();
           } else {
             msg = 'User is not logged in';
-            console.warn(msg);
-            this.router.navigate(['']);
           }
           reject(msg);
         }
@@ -127,7 +118,7 @@ export class AuthenticationService {
     });
   }
 
-  checkCredentials(): Promise<any> {
+  checkLoggedIn(): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!this.isLoggedIn()) {
         this.reqIsLogged()
@@ -154,10 +145,4 @@ export class AuthenticationService {
   isTeacher() {
     return this.user ? (this.user.roles.includes(this.TEACHER) || this.role === this.TEACHER) : false;
   }
-}
-
-function utf8_to_b64(str) {
-  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-    return String.fromCharCode(<any>'0x' + p1);
-  }));
 }

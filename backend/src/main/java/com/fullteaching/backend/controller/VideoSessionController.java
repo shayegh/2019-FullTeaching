@@ -1,16 +1,14 @@
 package com.fullteaching.backend.controller;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.PostConstruct;
-
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.model.Session;
 import com.fullteaching.backend.notifications.NotificationDispatcher;
+import com.fullteaching.backend.security.AuthorizationService;
+import com.fullteaching.backend.security.user.UserComponent;
 import com.fullteaching.backend.service.SessionService;
+import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.TokenOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,17 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import io.openvidu.java.client.OpenVidu;
-import io.openvidu.java.client.TokenOptions;
-
-import com.fullteaching.backend.security.AuthorizationService;
-import com.fullteaching.backend.security.user.UserComponent;
+import javax.annotation.PostConstruct;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/api-video-sessions")
@@ -72,7 +64,8 @@ public class VideoSessionController {
         this.openVidu = new OpenVidu(this.URL, this.SECRET);
     }
 
-    @LoginRequired
+
+
     @RequestMapping(value = "/get-sessionid-token/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> getSessionIdAndToken(@PathVariable(value = "id") String id) throws OpenViduJavaClientException, OpenViduHttpException {
 
@@ -162,7 +155,6 @@ public class VideoSessionController {
         }
     }
 
-    @LoginRequired
     @RequestMapping(value = "/remove-user", method = RequestMethod.POST)
     public ResponseEntity<Object> removeUser(@RequestBody String sessionName)
             throws Exception {

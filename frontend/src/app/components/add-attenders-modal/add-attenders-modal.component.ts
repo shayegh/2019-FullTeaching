@@ -5,6 +5,7 @@ import {ModalService} from '../../services/modal.service';
 import {CourseService} from '../../services/course.service';
 import {EditionService} from '../../services/edition.service';
 import {AnnouncerService} from '../../services/announcer.service';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-attenders-modal',
@@ -23,6 +24,7 @@ export class AddAttendersModalComponent implements OnInit {
               private announcerService: AnnouncerService,
               private modalService: ModalService,
               private courseService: CourseService,
+              public matDialog: MatDialog,
               private editionService: EditionService) {
   }
 
@@ -50,7 +52,7 @@ export class AddAttendersModalComponent implements OnInit {
           if (attendersAlreadyAdded.length > 0) {
             this.modalService.newErrorModal('The user is already in this course!', 'You tried to add a user that is already an attender of this course!', null);
           } else {
-            this.modalService.newSuccessModal('Attender added successfully!', `The attender: ${email} was added to this course`, null);
+            this.modalService.newSuccessModalWithCallback('Attender added successfully!', `The attender: ${email} was added to this course`, null);
             this.announcerService.announceAttenderAddedToCourse(this.editionService.getCourseAddingUsers(), attendersAdded);
           }
         },

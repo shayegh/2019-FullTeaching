@@ -1,8 +1,9 @@
 package com.fullteaching.backend.service;
 
 import com.fullteaching.backend.model.*;
+import com.fullteaching.backend.repo.CourseInvitationNotificationRepo;
 import com.fullteaching.backend.repo.CourseRepository;
-import com.fullteaching.backend.security.AuthorizationService;
+import com.fullteaching.backend.repo.SessionNotificationRepo;
 import com.fullteaching.backend.security.user.UserComponent;
 import com.fullteaching.backend.struct.FTService;
 import com.fullteaching.backend.struct.Role;
@@ -22,13 +23,17 @@ public class CourseService implements FTService<Course, Long> {
     private final UserService userService;
     private final UserComponent userComponent;
     private final FileService fileService;
+    private final CourseInvitationNotificationRepo courseInvitationNotificationRepo;
+    private final SessionNotificationRepo sessionNotificationRepo;
 
     @Autowired
-    public CourseService(CourseRepository repo, UserService userService, UserComponent userComponent, FileService fileService) {
+    public CourseService(CourseRepository repo, UserService userService, UserComponent userComponent, FileService fileService, CourseInvitationNotificationRepo courseInvitationNotificationRepo, SessionNotificationRepo sessionNotificationRepo) {
         this.repo = repo;
         this.userService = userService;
         this.userComponent = userComponent;
         this.fileService = fileService;
+        this.courseInvitationNotificationRepo = courseInvitationNotificationRepo;
+        this.sessionNotificationRepo = sessionNotificationRepo;
     }
 
     public Collection<Course> getCoursesFilteringHiddenFiles(User user) {
@@ -36,7 +41,7 @@ public class CourseService implements FTService<Course, Long> {
         if (!user.isRole(Role.TEACHER)) {
             for (Course course : courses) {
                 CourseDetails courseDetails = course.getCourseDetails();
-                if(Objects.nonNull(courseDetails)) {
+                if (Objects.nonNull(courseDetails)) {
                     List<FileGroup> files = courseDetails.getFiles();
                     if (Objects.nonNull(files)) {
                         for (FileGroup fileGroup : courseDetails.getFiles()) {
@@ -47,10 +52,6 @@ public class CourseService implements FTService<Course, Long> {
             }
         }
         return courses;
-    }
-
-    public Collection<Course> findByAttenders(Collection<User> users) {
-        return this.repo.findAllByAttendersIn(users);
     }
 
     public Collection<User> removeAttender(User attender, Course c) {
@@ -68,7 +69,7 @@ public class CourseService implements FTService<Course, Long> {
         // must check if the files of this course have date restriction
         if (Objects.nonNull(course) && !this.userComponent.getLoggedUser().isRole(Role.TEACHER)) {
             CourseDetails courseDetails = course.getCourseDetails();
-            if(Objects.nonNull(courseDetails)) {
+            if (Objects.nonNull(courseDetails)) {
 
                 // check all file groups
                 for (FileGroup fileGroup : courseDetails.getFiles()) {
@@ -99,5 +100,24 @@ public class CourseService implements FTService<Course, Long> {
         }
 
         return course;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        this.courseInvitationNotificationRepo.deleteAllByCourse_Id(id);
+        this.sessionNotificationRepo.deleteAllByCourse_Id(id);
+        this.repo.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll(Iterable<Course> entities) {
+        for (Course course : entities) {
+            this.delete(course);
+        }
+    }
+
+    @Override
+    public void delete(Course entity) {
+        this.deleteById(entity.getId());
     }
 }

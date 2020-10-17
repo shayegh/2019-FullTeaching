@@ -2,7 +2,6 @@ package com.fullteaching.backend.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fullteaching.backend.annotation.CourseAuthorized;
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.annotation.RoleFilter;
 import com.fullteaching.backend.model.Course;
 import com.fullteaching.backend.model.Course.SimpleCourseList;
@@ -52,7 +51,6 @@ public class CourseController extends SecureController {
         public Collection<String> emailsValidNotRegistered;
     }
 
-    @LoginRequired
     @JsonView(SimpleCourseList.class)
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> getCourses(@PathVariable(value = "id") long id) {
@@ -62,7 +60,6 @@ public class CourseController extends SecureController {
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
-    @LoginRequired
     @RequestMapping(value = "/course/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> getCourse(@PathVariable(value = "id") long id) {
         log.info("CRUD operation: Getting one course");
@@ -126,7 +123,7 @@ public class CourseController extends SecureController {
     }
 
     @CourseAuthorized(courseParam = "course_id", mustBeTeacherOfCourse = true)
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/delete")
     public ResponseEntity<Object> deleteCourse(@RequestParam(value = "course_id") long courseId) {
 
         log.info("CRUD operation: Deleting course");

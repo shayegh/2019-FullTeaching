@@ -41,7 +41,7 @@ export class CourseDetailsV2Component implements OnInit, AfterViewInit {
   }
 
   // move to selected tab in route
-  changeTab(): void{
+  changeTab(): void {
     this.tabs.selectedIndex = Number.parseInt(this.route.snapshot.paramMap.get('tabId'));
   }
 
@@ -54,9 +54,8 @@ export class CourseDetailsV2Component implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.authService.reqIsLogged()
+    this.authService.checkLoggedIn()
       .then(() => {
-
         this.user = this.authService.getCurrentUser();
         this.showedEntryId = Number.parseInt(this.route.snapshot.paramMap.get('showedEntryId'));
 
@@ -102,12 +101,10 @@ export class CourseDetailsV2Component implements OnInit, AfterViewInit {
 
         // refresh course on announce
         this.announcerService.courseRefreshAnnouncer$.subscribe(course => {
-          if(this.course.id === course.id){
+          if (this.course.id === course.id) {
             this.initCourse();
           }
         });
-
-
       })
       .catch(err => {
         console.log(err);
@@ -181,21 +178,14 @@ export class CourseDetailsV2Component implements OnInit, AfterViewInit {
     })
       .then(result => {
         if (result) {
-
           let value: string = result['value'] as any as string;
-
           if (value) {
-
             this.course.title = value;
-
             this.courseService.editCourse(this.course, value).subscribe(
               data => {
-
                 this.modalService.newToastModal(`Successfully changed name of the course to: ${value}`)
-
               }, error => this.modalService.newErrorModal('An error ocured while updating the name of the course!', error, null)
             );
-
           }
         }
       })
@@ -204,13 +194,14 @@ export class CourseDetailsV2Component implements OnInit, AfterViewInit {
   createFileGroup() {
     this.modalService.newInputCallbackedModal('Enter file group name:', (resp) => {
       const name = resp.value;
-      const fg = new FileGroup(name, null);
-      this.fileService.newFileGroup(fg, this.course.courseDetails.id)
-        .subscribe(data => {
-
-          this.course.courseDetails.files = data.files;
-          this.modalService.newToastModal('Added new file group!');
-        })
+      if (name) {
+        const fg = new FileGroup(name, null);
+        this.fileService.newFileGroup(fg, this.course.courseDetails.id)
+          .subscribe(data => {
+            this.course.courseDetails.files = data.files;
+            this.modalService.newToastModal('Added new file group!');
+          });
+      }
     })
   }
 

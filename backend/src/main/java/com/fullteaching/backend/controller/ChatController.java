@@ -1,6 +1,5 @@
 package com.fullteaching.backend.controller;
 
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.model.ChatConversation;
 import com.fullteaching.backend.model.ChatMessage;
 import com.fullteaching.backend.model.User;
@@ -8,7 +7,6 @@ import com.fullteaching.backend.security.user.UserComponent;
 import com.fullteaching.backend.service.ChatService;
 import com.fullteaching.backend.service.UserService;
 import com.fullteaching.backend.view.UserChatView;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +33,6 @@ public class ChatController {
         this.userService = userService;
     }
 
-    @LoginRequired
     @PutMapping("/messagesSeen/from/{from}/to/{to}")
     public ResponseEntity<Boolean> sawMessages(@PathVariable long from, @PathVariable long to){
         log.info("Updating messages seen from {} to {}", from, to);
@@ -45,7 +42,6 @@ public class ChatController {
         return ResponseEntity.ok(resp);
     }
 
-    @LoginRequired
     @GetMapping("/all/chatUsers")
     public ResponseEntity<Page<UserChatView>> getAllChatUsers(@RequestParam int page, @RequestParam int size){
         User me = this.userComponent.getLoggedUser();
@@ -54,7 +50,6 @@ public class ChatController {
         return ResponseEntity.ok(userChatViews);
     }
 
-    @LoginRequired
     @GetMapping("/all/chatUsers/byName/{name}")
     public ResponseEntity<Page<UserChatView>> getAllChatUsers(@PathVariable String name, @RequestParam int page, @RequestParam int size){
         User me = this.userComponent.getLoggedUser();
@@ -63,7 +58,6 @@ public class ChatController {
         return ResponseEntity.ok(userChatViews);
     }
 
-    @LoginRequired
     @GetMapping("/all")
     public ResponseEntity<Collection<ChatConversation>> getAll() {
         User user = this.userComponent.getLoggedUser();
@@ -71,7 +65,6 @@ public class ChatController {
         return ResponseEntity.ok(chatConversations);
     }
 
-    @LoginRequired
     @PostMapping("/new/user/{userId}")
     public ResponseEntity<ChatConversation> newConversation(@PathVariable long userId, @RequestBody ChatMessage firstMessage) {
 
@@ -86,8 +79,6 @@ public class ChatController {
         }
     }
 
-
-    @LoginRequired
     @GetMapping("/conversation/withuser/{userId}")
     public ResponseEntity<Collection<ChatConversation>> getChatHistory(@PathVariable("userId") long userId) {
         User user = this.userService.getFromId(userId);
@@ -101,7 +92,6 @@ public class ChatController {
         }
     }
 
-    @LoginRequired
     @PutMapping("/message/conversation/{id}")
     public ResponseEntity<ChatConversation> sendMessage(@PathVariable long id, @RequestBody ChatMessage chatMessage) {
         ChatConversation chatConversation = this.chatService.getFromId(id);
@@ -113,7 +103,6 @@ public class ChatController {
         }
     }
 
-    @LoginRequired
     @GetMapping("/unseen/count/user/{userId}")
     public ResponseEntity<Long> getCountOfUnseenMessages(@PathVariable long userId){
         User me = this.userComponent.getLoggedUser();

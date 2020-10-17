@@ -1,6 +1,5 @@
 package com.fullteaching.backend.controller;
 
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.model.User;
 import com.fullteaching.backend.security.AuthorizationService;
 import com.fullteaching.backend.security.user.UserComponent;
@@ -8,16 +7,12 @@ import com.fullteaching.backend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.Objects;
 
 @CrossOrigin(origins = "*")
@@ -40,14 +35,12 @@ public class UserController {
         this.authorizationService = authorizationService;
     }
 
-    @LoginRequired
     @GetMapping("/all")
     public ResponseEntity<Page<User>> getAll(@RequestParam int page, @RequestParam int size){
         Page<User> response = this.userService.getall(page, size);
         return ResponseEntity.ok(response);
     }
 
-    @LoginRequired
     @GetMapping("/byName/{name}")
     public ResponseEntity<Page<User>> getByName(@PathVariable String name, @RequestParam int page, @RequestParam int size){
         Page<User> response = this.userService.getByname(name, page, size);

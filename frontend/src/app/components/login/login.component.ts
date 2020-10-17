@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from "../../services/authentication.service";
-import {UserService} from "../../services/user.service";
-import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {User} from "../../classes/user";
-import {ModalService} from "../../services/modal.service";
+import {AuthenticationService} from '../../services/authentication.service';
+import {UserService} from '../../services/user.service';
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {User} from '../../classes/user';
+import {ModalService} from '../../services/modal.service';
 
 @Component({
   selector: 'app-login',
@@ -13,9 +13,7 @@ import {ModalService} from "../../services/modal.service";
 })
 export class LoginComponent implements OnInit {
 
-
-  public loginFormGroup : FormGroup;
-
+  public loginFormGroup: FormGroup;
 
   constructor(private authenticationService: AuthenticationService,
               private userService: UserService,
@@ -24,8 +22,6 @@ export class LoginComponent implements OnInit {
               private modalService: ModalService) {
   }
 
-
-
   createForm() {
     this.loginFormGroup = this.formBuilder.group({
       'email': ['', [Validators.required, Validators.email]],
@@ -33,25 +29,22 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onSubmit(post) {
-    let email = post['email'];
-    let password = post['password'];
+  onSubmit() {
+    let email = this.loginFormGroup.value['email'];
+    let password = this.loginFormGroup.value['password'];
 
     console.log(`Calling login for user ${email}`);
 
     this.authenticationService.logIn(email, password).subscribe(
       (result: User) => {
-        console.log(`Login succesful! LOGGED AS ${this.authenticationService.getCurrentUser().name}`);
         this.router.navigate(['/courses']);
       },
       error => {
+        console.log(error)
         let status = error.status;
-
         console.log(`Login error with status ${status}`);
-
         let title = 'Login error!';
         let content = 'Please check your email or password';
-
         this.modalService.newErrorModal(title, content, null);
       });
   }

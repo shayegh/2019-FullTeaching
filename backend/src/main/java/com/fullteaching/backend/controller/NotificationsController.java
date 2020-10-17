@@ -1,6 +1,5 @@
 package com.fullteaching.backend.controller;
 
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.model.Notification;
 import com.fullteaching.backend.security.AuthorizationService;
 import com.fullteaching.backend.security.user.UserComponent;
@@ -28,14 +27,12 @@ public class NotificationsController extends SecureController {
     }
 
     @GetMapping("/all")
-    @LoginRequired
     public ResponseEntity<Collection<Notification>> getAll() {
         log.info("Getting all notifications from user: {}", this.user.getLoggedUser().getName());
         return ResponseEntity.ok(this.notificationService.getAllFromUser(user.getLoggedUser()));
     }
 
     @DeleteMapping("/all")
-    @LoginRequired
     public ResponseEntity<?> removeAllNotifications() {
         try {
             this.notificationService.unseeAll(user.getLoggedUser());
@@ -49,22 +46,24 @@ public class NotificationsController extends SecureController {
     }
 
     @DeleteMapping("/byId/{id}")
-    @LoginRequired
     public ResponseEntity<?> removeById(@PathVariable long id) {
         try {
 
             Notification notification = notificationService.getFromId(id);
 
-            ResponseEntity<?> unauthorized = authorizationService.checkAuthorization(notification, notification.getUser());
-            if (Objects.nonNull(unauthorized)) {
-                log.warn("User {} is not authorized to unsee notification: {}", user.getLoggedUser().getName(), id);
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            if (Objects.nonNull(notification)) {
+                ResponseEntity<?> unauthorized = authorizationService.checkAuthorization(notification, notification.getUser());
+                if (Objects.nonNull(unauthorized)) {
+                    log.warn("User {} is not authorized to unsee notification: {}", user.getLoggedUser().getName(), id);
+                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                }
+                this.notificationService.unsee(id);
+                return ResponseEntity
+                        .ok()
+                        .build();
             }
-
-            this.notificationService.unsee(id);
-            return ResponseEntity
-                    .ok()
-                    .build();
+            log.error("Notification with id {} was not found!", id);
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             log.error("Error removing all notifications", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

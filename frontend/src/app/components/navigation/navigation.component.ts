@@ -27,7 +27,7 @@ export class NavigationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authenticationService.reqIsLogged()
+    this.authenticationService.checkLoggedIn()
       .then(value => {
         if (this.isAnimatedBackgroundEnabled()) {
           this.applyVanta();
