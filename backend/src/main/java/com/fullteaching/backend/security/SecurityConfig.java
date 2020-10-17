@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public final UserRepositoryAuthProvider userRepoAuthProvider;
     private final RoleCheckInterceptor roleCheckInterceptor;
     private final CourseAuthorizerInterceptor courseAuthorizerInterceptor;
-    private final String ALLOWED_ORIGINS = "https://localhost:4200";
+    private final String ALLOWED_ORIGINS = "http://localhost:4200";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
