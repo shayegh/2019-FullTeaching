@@ -9,6 +9,8 @@ import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.model.Session;
 import com.fullteaching.backend.notifications.NotificationDispatcher;
 import com.fullteaching.backend.service.SessionService;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -72,7 +74,7 @@ public class VideoSessionController {
 
     @LoginRequired
     @RequestMapping(value = "/get-sessionid-token/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Object> getSessionIdAndToken(@PathVariable(value = "id") String id) {
+    public ResponseEntity<Object> getSessionIdAndToken(@PathVariable(value = "id") String id) throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("Getting OpenVidu sessionId and token for session with id '{}'", id);
         long id_i = -1;
@@ -93,7 +95,7 @@ public class VideoSessionController {
 
             if (this.lessonIdSession.get(id_i) == null) { // First user connecting to the session (only the teacher can)
                 if (teacherAuthorized != null) { // If the user is not the teacher of the course
-                    log.error("Error geting OpenVidu sessionId and token: First user must be the teacher of the course");
+                    log.error("Error getting OpenVidu sessionId and token: First user must be the teacher of the course");
                     return teacherAuthorized;
                 } else {
 
@@ -110,7 +112,7 @@ public class VideoSessionController {
                             .data("{\"name\": \"" + this.user.getLoggedUser().getNickName() + "\", \"isTeacher\": true, \"color\": \"" + colors[0] + "\"}")
                             .build());
 
-                    log.info("OpenVidu token '{}' (for session '{}') succesfully retrieved from OpenVidu Server", token, sessionId);
+                    log.info("OpenVidu token '{}' (for session '{}') successfully retrieved from OpenVidu Server", token, sessionId);
 
                     responseJson.put(0, sessionId);
                     responseJson.put(1, token);
@@ -128,7 +130,7 @@ public class VideoSessionController {
             } else { // The video session is already created
                 ResponseEntity<Object> userAuthorized = authorizationService.checkAuthorizationUsers(session, session.getCourse().getAttenders());
                 if (userAuthorized != null) { // If the user is not an attender of the course
-                    log.error("Error geting OpenVidu token: user must be a student of the course");
+                    log.error("Error getting OpenVidu token: user must be a student of the course");
                     return userAuthorized;
                 } else {
                     io.openvidu.java.client.Session s = this.lessonIdSession.get(id_i);
@@ -142,7 +144,7 @@ public class VideoSessionController {
                                     + colors[this.sessionIdindexColor.get(s.getSessionId())] + "\"}")
                             .build());
 
-                    log.info("OpenVidu token '{}' (for session '{}') succesfully retrieved from OpenVidu Server", token, sessionId);
+                    log.info("OpenVidu token '{}' (for session '{}') successfully retrieved from OpenVidu Server", token, sessionId);
 
                     responseJson.put(0, sessionId);
                     responseJson.put(1, token);
