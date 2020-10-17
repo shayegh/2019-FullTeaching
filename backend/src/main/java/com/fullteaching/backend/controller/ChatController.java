@@ -1,6 +1,5 @@
 package com.fullteaching.backend.controller;
 
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.model.ChatConversation;
 import com.fullteaching.backend.model.ChatMessage;
 import com.fullteaching.backend.model.User;
@@ -8,7 +7,6 @@ import com.fullteaching.backend.security.user.UserComponent;
 import com.fullteaching.backend.service.ChatService;
 import com.fullteaching.backend.service.UserService;
 import com.fullteaching.backend.view.UserChatView;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

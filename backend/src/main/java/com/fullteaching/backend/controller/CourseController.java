@@ -2,7 +2,6 @@ package com.fullteaching.backend.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fullteaching.backend.annotation.CourseAuthorized;
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.annotation.RoleFilter;
 import com.fullteaching.backend.model.Course;
 import com.fullteaching.backend.model.Course.SimpleCourseList;

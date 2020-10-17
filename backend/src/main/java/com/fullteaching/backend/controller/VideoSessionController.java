@@ -1,6 +1,5 @@
 package com.fullteaching.backend.controller;
 
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.model.Session;
 import com.fullteaching.backend.notifications.NotificationDispatcher;
 import com.fullteaching.backend.security.AuthorizationService;

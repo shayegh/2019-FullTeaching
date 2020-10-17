@@ -1,6 +1,5 @@
 package com.fullteaching.backend.controller;
 
-import com.fullteaching.backend.annotation.LoginRequired;
 import com.fullteaching.backend.annotation.RoleFilter;
 import com.fullteaching.backend.model.Comment;
 import com.fullteaching.backend.service.CommentService;
@@ -15,7 +14,6 @@ import com.fullteaching.backend.security.AuthorizationService;
 import com.fullteaching.backend.model.User;
 import com.fullteaching.backend.security.user.UserComponent;
 import com.fullteaching.backend.struct.Role;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
