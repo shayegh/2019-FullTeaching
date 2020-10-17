@@ -11,4 +11,7 @@ public interface SessionNotificationRepo extends JpaRepository<SessionStartedNot
     @Transactional
     void deleteAllBySession_Id(Long sessionId);
 
+    @Transactional
+    void deleteAllByCourse_Id(Long courseId);
+
 }

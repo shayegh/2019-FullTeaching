@@ -3,6 +3,7 @@ package com.fullteaching.backend.service;
 import com.fullteaching.backend.model.*;
 import com.fullteaching.backend.repo.CourseInvitationNotificationRepo;
 import com.fullteaching.backend.repo.CourseRepository;
+import com.fullteaching.backend.repo.SessionNotificationRepo;
 import com.fullteaching.backend.security.user.UserComponent;
 import com.fullteaching.backend.struct.FTService;
 import com.fullteaching.backend.struct.Role;
@@ -23,14 +24,16 @@ public class CourseService implements FTService<Course, Long> {
     private final UserComponent userComponent;
     private final FileService fileService;
     private final CourseInvitationNotificationRepo courseInvitationNotificationRepo;
+    private final SessionNotificationRepo sessionNotificationRepo;
 
     @Autowired
-    public CourseService(CourseRepository repo, UserService userService, UserComponent userComponent, FileService fileService, CourseInvitationNotificationRepo courseInvitationNotificationRepo) {
+    public CourseService(CourseRepository repo, UserService userService, UserComponent userComponent, FileService fileService, CourseInvitationNotificationRepo courseInvitationNotificationRepo, SessionNotificationRepo sessionNotificationRepo) {
         this.repo = repo;
         this.userService = userService;
         this.userComponent = userComponent;
         this.fileService = fileService;
         this.courseInvitationNotificationRepo = courseInvitationNotificationRepo;
+        this.sessionNotificationRepo = sessionNotificationRepo;
     }
 
     public Collection<Course> getCoursesFilteringHiddenFiles(User user) {
@@ -102,6 +105,7 @@ public class CourseService implements FTService<Course, Long> {
     @Override
     public void deleteById(Long id) {
         this.courseInvitationNotificationRepo.deleteAllByCourse_Id(id);
+        this.sessionNotificationRepo.deleteAllByCourse_Id(id);
         this.repo.deleteById(id);
     }
 

@@ -124,7 +124,7 @@ public class CourseController extends SecureController {
     }
 
     @CourseAuthorized(courseParam = "course_id", mustBeTeacherOfCourse = true)
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/delete")
     public ResponseEntity<Object> deleteCourse(@RequestParam(value = "course_id") long courseId) {
 
         log.info("CRUD operation: Deleting course");
